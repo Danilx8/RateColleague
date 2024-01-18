@@ -24,6 +24,7 @@
     <Folder Include="Areas\Interviewer\Data\" />
     <Folder Include="Areas\Interviewer\Models\" />
     <Folder Include="Areas\Interviewer\Views\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
