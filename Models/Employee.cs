@@ -4,5 +4,6 @@ namespace RateColleague.Models
 {
     public class Employee : IdentityUser
     {
+        public Room? Room { get; set; }
     }
 }

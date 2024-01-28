@@ -9,7 +9,8 @@ namespace RateColleague.Models
         public string Title { get; set; } = "Title";
         public string Text { get; set; } = "Your question";
 
-        public required Room Room { get; set; } 
+        public required Room Room { get; set; }
+        public Group? Group { get; set; }
         public List<Grade> Grades { get; set; } = [];
     }
 }

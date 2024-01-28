@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RateColleague.Data;
@@ -11,9 +12,11 @@ using RateColleague.Data;
 namespace RateColleague.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240126074132_AddRatedColleagues")]
+    partial class AddRatedColleagues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,7 +306,13 @@ namespace RateColleague.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("RoomId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RoomId")
+                        .IsUnique();
 
                     b.ToTable("RatedColleagues");
                 });
@@ -331,19 +340,13 @@ namespace RateColleague.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("RatedColleagueId")
+                    b.Property<int>("UniqueSign")
                         .HasColumnType("integer");
-
-                    b.Property<string>("UniqueSign")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InitiatorId")
                         .IsUnique();
-
-                    b.HasIndex("RatedColleagueId");
 
                     b.HasIndex("UniqueSign")
                         .IsUnique();
@@ -416,7 +419,7 @@ namespace RateColleague.Migrations
             modelBuilder.Entity("RateColleague.Models.Question", b =>
                 {
                     b.HasOne("RateColleague.Models.Group", "Group")
-                        .WithMany()
+                        .WithMany("Questions")
                         .HasForeignKey("GroupId");
 
                     b.HasOne("RateColleague.Models.Room", "Room")
@@ -430,6 +433,17 @@ namespace RateColleague.Migrations
                     b.Navigation("Room");
                 });
 
+            modelBuilder.Entity("RateColleague.Models.RatedColleague", b =>
+                {
+                    b.HasOne("RateColleague.Models.Room", "Room")
+                        .WithOne("RatedColleague")
+                        .HasForeignKey("RateColleague.Models.RatedColleague", "RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("RateColleague.Models.Room", b =>
                 {
                     b.HasOne("RateColleague.Models.Employee", "Initiator")
@@ -438,20 +452,17 @@ namespace RateColleague.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RateColleague.Models.RatedColleague", "RatedColleague")
-                        .WithMany()
-                        .HasForeignKey("RatedColleagueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Initiator");
-
-                    b.Navigation("RatedColleague");
                 });
 
             modelBuilder.Entity("RateColleague.Models.Employee", b =>
                 {
                     b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("RateColleague.Models.Group", b =>
+                {
+                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("RateColleague.Models.Question", b =>
@@ -462,6 +473,9 @@ namespace RateColleague.Migrations
             modelBuilder.Entity("RateColleague.Models.Room", b =>
                 {
                     b.Navigation("Questions");
+
+                    b.Navigation("RatedColleague")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
