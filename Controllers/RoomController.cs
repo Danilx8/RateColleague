@@ -16,7 +16,7 @@ namespace RateColleague.Controllers
         private readonly IRatingCollectionService rating = _rating;
 
         [HttpGet]
-        [Route("{signature}")]
+        [Route("room/{signature}")]
         public IActionResult Retrieve(string signature, [FromQuery] Pagination filter)
         {
             Room room;
@@ -73,13 +73,8 @@ namespace RateColleague.Controllers
                 return BadRequest("Close time has to be in the future");
             }
 
-            var initiator = db
-                .Users
-                .Where(u => u.Id == HttpContext
-                    .User
-                    .FindFirst(ClaimTypes.NameIdentifier)!
-                    .ToString())
-                .FirstOrDefault()!;
+            var initiatorId = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
+            Employee initiator = db.Users.Find(initiatorId.Value)!;
 
             RatedColleague colleague = new()
             {
@@ -88,7 +83,6 @@ namespace RateColleague.Controllers
             };
 
             db.RatedColleagues.Add(colleague);
-            db.SaveChanges();
 
             Room generatedRoom = new()
             {
@@ -102,7 +96,6 @@ namespace RateColleague.Controllers
             };
 
             db.Rooms.Add(generatedRoom);
-            db.SaveChanges();
 
             List<Question> generatedQuestions = new(room.Questions.Select
                 (q => new Question()
@@ -113,9 +106,15 @@ namespace RateColleague.Controllers
                 }));
 
             db.Questions.AddRange(generatedQuestions);
-            db.SaveChanges();
 
-            await rating.ScheduleJobAsync(generatedRoom.Id, room.ClosePollTime);
+            try
+            {
+                await rating.ScheduleJobAsync(generatedRoom.Id, room.ClosePollTime);
+            }
+            finally
+            {
+                db.SaveChanges();
+            }
 
             return Json(generatedRoom);
         }

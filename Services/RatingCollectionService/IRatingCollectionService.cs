@@ -2,8 +2,8 @@
 {
     public interface IRatingCollectionService
     {
-        public Task ScheduleJobAsync(int roomId, DateTime closingDate);
+        public Task ScheduleJobAsync(string roomUniqueSign, DateTime closingDate);
 
-        public Task TerminateJob(int roomId);
+        public Task TerminateJob(string roomUniqueSign);
     }
 }

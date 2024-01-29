@@ -12,7 +12,7 @@ namespace RateColleague.Jobs
         private readonly ApplicationDbContext db = _db;
         private readonly EmailSenderService emailSender = _emailSender;
 
-        public int RoomId { private get; set; }
+        public string roomUniqueSign { private get; set; }
 
         public async Task Execute(IJobExecutionContext context)
         {
@@ -20,7 +20,7 @@ namespace RateColleague.Jobs
             {
                 Room room = await db
                     .Rooms
-                    .Where(r => r.Id == RoomId)
+                    .Where(r => r.UniqueSign == roomUniqueSign)
                     .Include(r => r.Questions)
                         .ThenInclude(q => q.Grades)
                     .FirstAsync();
@@ -29,7 +29,7 @@ namespace RateColleague.Jobs
                 emailSender.SendEmailAsync(room.Initiator.Email ?? throw new UnauthorizedAccessException());
             } catch(Exception)
             {
-                await Console.Error.WriteLineAsync($"Room with id {RoomId} couldn't collect rating");
+                await Console.Error.WriteLineAsync($"Room with id {roomUniqueSign} couldn't collect rating");
             }
         }
     }

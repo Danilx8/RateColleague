@@ -7,15 +7,15 @@ namespace RateColleague.Services.RatingCollectionService
 {
     public class RatingCollectionService : IRatingCollectionService
     {
-        public async Task ScheduleJobAsync(int roomId, DateTime closingDate)
+        public async Task ScheduleJobAsync(string roomUniqueSign, DateTime closingDate)
         {
             IJobDetail job = JobBuilder.Create<CollectRatingJob>()
-                .WithIdentity(roomId.ToString(), "RoomsLifetime")
-                .UsingJobData("RoomId", roomId)
+                .WithIdentity(roomUniqueSign, "RoomsLifetime")
+                .UsingJobData("RoomId", roomUniqueSign)
                 .Build();
 
             ITrigger trigger = TriggerBuilder.Create()
-                .WithIdentity(roomId.ToString(), "RoomsLifetime")
+                .WithIdentity(roomUniqueSign, "RoomsLifetime")
                 .StartAt(closingDate)
                 .ForJob(job.Key)
                 .Build();
@@ -24,10 +24,10 @@ namespace RateColleague.Services.RatingCollectionService
             await scheduler.ScheduleJob(job, trigger);
         }
 
-        public async Task TerminateJob(int roomId)
+        public async Task TerminateJob(string roomUniqueSign)
         {
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
-            await scheduler.TriggerJob(new JobKey(roomId.ToString(), "RoomsLifeTime"));
+            await scheduler.TriggerJob(new JobKey(roomUniqueSign, "RoomsLifeTime"));
         }
     }
 }

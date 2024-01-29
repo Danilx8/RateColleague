@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -55,7 +56,7 @@ namespace RateColleague.Controllers
             ], "Cookies");
 
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-            await HttpContext.SignInAsync(claimsPrincipal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
             return Ok();
         }
