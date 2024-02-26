@@ -23,7 +23,7 @@ namespace RateColleague.Services.EmailSenderService
 
             using SmtpClient client = new();
             client.ConnectAsync("smtp.yandex.ru", 25, false);
-            client.Authenticate("lugovskihdanil@yandex.ru", "Wormix99");
+            client.Authenticate("lugovskihdanil@yandex.ru", "password");
             client.Send(emailMessage);
             client.Disconnect(true);
         }
