@@ -12,7 +12,7 @@ namespace RateColleague.Jobs
         private readonly ApplicationDbContext db = _db;
         private readonly EmailSenderService emailSender = _emailSender;
 
-        public string roomUniqueSign { private get; set; }
+        public required string roomUniqueSign { private get; set; }
 
         public async Task Execute(IJobExecutionContext context)
         {
@@ -21,10 +21,10 @@ namespace RateColleague.Jobs
                 Room room = await db
                     .Rooms
                     .Where(r => r.UniqueSign == roomUniqueSign)
-                    .Include(r => r.Questions)
-                        .ThenInclude(q => q.Grades)
+                    //.Include(r => r.Questions)
+                    //    .ThenInclude(q => q.Grades)
                     .FirstAsync();
-                await db.Groups.LoadAsync();
+                //await db.Groups.LoadAsync();
 
                 emailSender.SendEmailAsync(room.Initiator.Email ?? throw new UnauthorizedAccessException());
             } catch(Exception)

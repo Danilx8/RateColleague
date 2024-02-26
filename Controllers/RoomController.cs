@@ -109,22 +109,22 @@ namespace RateColleague.Controllers
 
             try
             {
-                await rating.ScheduleJobAsync(generatedRoom.Id, room.ClosePollTime);
+                await rating.ScheduleJobAsync(generatedRoom.UniqueSign, room.ClosePollTime);
             }
             finally
             {
                 db.SaveChanges();
             }
 
-            return Json(generatedRoom);
+            return Ok(generatedRoom);
         }
 
         [Route("/kill/{id}")]
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> TerminateAsync(int id)
+        public async Task<IActionResult> TerminateAsync(string sign)
         {
-            await rating.TerminateJob(id);
+            await rating.TerminateJob(sign);
             return Ok("Success");
         }
 

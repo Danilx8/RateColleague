@@ -23,6 +23,5 @@ namespace RateColleague.Models
         [BindNever]
         [ForeignKey("InitiatorId")]
         public required Employee Initiator { get; set; }
-        public List<Question> Questions { get; set; } = [];
     }
 }

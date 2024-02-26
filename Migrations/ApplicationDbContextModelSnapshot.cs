@@ -236,7 +236,7 @@ namespace RateColleague.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Grades");
+                    b.ToTable("Grades", (string)null);
                 });
 
             modelBuilder.Entity("RateColleague.Models.Group", b =>
@@ -253,7 +253,7 @@ namespace RateColleague.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Groups", (string)null);
                 });
 
             modelBuilder.Entity("RateColleague.Models.Question", b =>
@@ -284,7 +284,7 @@ namespace RateColleague.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("RateColleague.Models.RatedColleague", b =>
@@ -305,7 +305,7 @@ namespace RateColleague.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RatedColleagues");
+                    b.ToTable("RatedColleagues", (string)null);
                 });
 
             modelBuilder.Entity("RateColleague.Models.Room", b =>
@@ -347,7 +347,7 @@ namespace RateColleague.Migrations
                     b.HasIndex("UniqueSign")
                         .IsUnique();
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
